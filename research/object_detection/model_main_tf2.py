@@ -53,6 +53,8 @@ flags.DEFINE_string(
 flags.DEFINE_integer('eval_timeout', 3600, 'Number of seconds to wait for an'
                      'evaluation checkpoint before exiting.')
 
+flags.DEFINE_bool('memory_growth', True, 'Whether to allow memory growth on your gpu')
+
 flags.DEFINE_bool('use_tpu', False, 'Whether the job is executing on a TPU.')
 flags.DEFINE_string(
     'tpu_name',
@@ -75,6 +77,9 @@ def main(unused_argv):
   flags.mark_flag_as_required('model_dir')
   flags.mark_flag_as_required('pipeline_config_path')
   tf.config.set_soft_device_placement(True)
+  gpu_devices = tf.config.experimental.list_physical_devices('GPU')
+  for device in gpu_devices:
+    tf.config.experimental.set_memory_growth(devicce, FLAGS.memory_growth)
 
   if FLAGS.checkpoint_dir:
     model_lib_v2.eval_continuously(
