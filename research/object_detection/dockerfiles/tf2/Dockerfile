@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     python3-pil \
     python3-lxml \
     python3-tk \
-    wget
+    wget 
 
 # Install gcloud and gsutil commands
 # https://cloud.google.com/sdk/docs/quickstart-debian-ubuntu
@@ -37,5 +37,12 @@ ENV PATH="/home/tensorflow/.local/bin:${PATH}"
 
 RUN python -m pip install -U pip
 RUN python -m pip install .
+
+# instal tensorflow serving
+RUN echo "deb [arch=amd64] http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal" | tee /etc/apt/sources.list.d/tensorflow-serving.list && \
+curl https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | apt-key add -
+
+RUN apt-get update && apt-get install -y \
+    tensorflow-model-server
 
 ENV TF_CPP_MIN_LOG_LEVEL 3
