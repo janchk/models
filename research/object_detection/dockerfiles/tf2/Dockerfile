@@ -20,6 +20,13 @@ RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
     apt-get update -y && apt-get install google-cloud-sdk -y
 
+# instal tensorflow serving
+RUN echo "deb [arch=amd64] http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal" | tee -a /etc/apt/sources.list.d/tensorflow-serving.list && \
+curl https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | apt-key add -
+
+RUN apt-get update && apt-get install -y \
+    tensorflow-model-server
+
 # Add new user to avoid running as root
 RUN useradd -ms /bin/bash tensorflow
 USER tensorflow
@@ -37,12 +44,5 @@ ENV PATH="/home/tensorflow/.local/bin:${PATH}"
 
 RUN python -m pip install -U pip
 RUN python -m pip install .
-
-# instal tensorflow serving
-RUN echo "deb [arch=amd64] http://storage.googleapis.com/tensorflow-serving-apt stable tensorflow-model-server tensorflow-model-server-universal" | tee /etc/apt/sources.list.d/tensorflow-serving.list && \
-curl https://storage.googleapis.com/tensorflow-serving-apt/tensorflow-serving.release.pub.gpg | apt-key add -
-
-RUN apt-get update && apt-get install -y \
-    tensorflow-model-server
 
 ENV TF_CPP_MIN_LOG_LEVEL 3
