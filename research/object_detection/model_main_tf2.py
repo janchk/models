@@ -79,7 +79,7 @@ def main(unused_argv):
   tf.config.set_soft_device_placement(True)
   gpu_devices = tf.config.experimental.list_physical_devices('GPU')
   for device in gpu_devices:
-    tf.config.experimental.set_memory_growth(devicce, FLAGS.memory_growth)
+    tf.config.experimental.set_memory_growth(device, FLAGS.memory_growth)
 
   if FLAGS.checkpoint_dir:
     model_lib_v2.eval_continuously(
